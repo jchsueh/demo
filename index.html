@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三國演義 - 網頁簡化版</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 引入 Google 字體，增加古典感 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <!-- 頂部資訊列 -->
+        <header class="top-bar">
+            <h1>三國演義 <span class="subtitle">簡化版</span></h1>
+            <div class="time-info">
+                <span>西元 <span id="year">189</span> 年</span>
+                <span><span id="month">1</span> 月</span>
+            </div>
+            <div class="global-resources">
+                <div class="resource-item" title="金錢">💰 <span id="player-gold">1000</span></div>
+                <div class="resource-item" title="糧草">🌾 <span id="player-food">5000</span></div>
+            </div>
+            <button id="next-turn-btn" class="btn btn-primary">下一回合</button>
+        </header>
+
+        <div class="main-content">
+            <!-- 左側地圖區 -->
+            <section class="map-section">
+                <div id="map-grid" class="map-grid">
+                    <!-- 城池將由 JS 動態生成 -->
+                </div>
+            </section>
+
+            <!-- 右側資訊與操作區 -->
+            <section class="info-section">
+                <div id="city-info-panel" class="panel hidden">
+                    <h2 id="city-name" class="city-title">選擇城池</h2>
+                    <p class="city-owner">所屬勢力：<span id="city-owner-name">-</span></p>
+                    
+                    <div class="city-stats">
+                        <div class="stat-row"><span>人口：</span><span id="city-pop">0</span></div>
+                        <div class="stat-row"><span>農業：</span><span id="city-agri">0</span></div>
+                        <div class="stat-row"><span>商業：</span><span id="city-comm">0</span></div>
+                        <div class="stat-row"><span>兵力：</span><span id="city-troops">0</span></div>
+                    </div>
+
+                    <div class="generals-list-container">
+                        <h3>駐守武將</h3>
+                        <ul id="city-generals" class="generals-list">
+                            <!-- 武將由 JS 動態生成 -->
+                        </ul>
+                    </div>
+
+                    <div id="action-menu" class="action-menu hidden">
+                        <h3>內政指令</h3>
+                        <div class="action-buttons">
+                            <button class="btn btn-action" id="btn-develop-agri">開墾 (耗金50)</button>
+                            <button class="btn btn-action" id="btn-develop-comm">投資 (耗金50)</button>
+                            <button class="btn btn-action" id="btn-draft">徵兵 (耗金100)</button>
+                            <button class="btn btn-action btn-danger" id="btn-attack">出征</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="default-panel" class="panel">
+                    <p class="placeholder-text">請在地圖上選擇一個城池來查看詳細資訊與執行指令。</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- 訊息提示框 -->
+    <div id="message-toast" class="toast hidden"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

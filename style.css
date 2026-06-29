@@ -1,0 +1,320 @@
+:root {
+    /* 古典三國風格配色 */
+    --bg-dark: #1a0f0a;
+    --panel-bg: rgba(42, 20, 15, 0.85);
+    --border-gold: #d4af37;
+    --text-primary: #f5e6d3;
+    --text-secondary: #cba876;
+    --accent-red: #8b0000;
+    --accent-blue: #1b4b6b;
+    --accent-green: #2d5a27;
+    
+    --btn-bg: linear-gradient(145deg, #3a1c15, #2a100a);
+    --btn-hover: linear-gradient(145deg, #4a261c, #3a1c15);
+    
+    --player-color: var(--accent-green);
+    --enemy-color: var(--accent-red);
+    --neutral-color: #555;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Noto Serif TC', serif;
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at center, #2a1510 0%, #0a0502 100%);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* 頂部資訊列 */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--panel-bg);
+    border: 2px solid var(--border-gold);
+    border-radius: 8px;
+    padding: 15px 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    font-size: 28px;
+    color: var(--border-gold);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.time-info, .global-resources {
+    display: flex;
+    gap: 20px;
+    font-size: 18px;
+}
+
+.resource-item {
+    background: rgba(0,0,0,0.5);
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: 1px solid var(--text-secondary);
+}
+
+/* 按鈕共用樣式 */
+.btn {
+    font-family: 'Noto Serif TC', serif;
+    padding: 10px 20px;
+    border: 1px solid var(--border-gold);
+    border-radius: 4px;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: linear-gradient(145deg, #8b6b22, #5a4515);
+    font-size: 18px;
+    padding: 10px 30px;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(145deg, #a8832a, #73591b);
+}
+
+.btn-action {
+    background: var(--btn-bg);
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.btn-action:hover {
+    background: var(--btn-hover);
+}
+
+.btn-danger {
+    background: linear-gradient(145deg, #6b1b1b, #4a0a0a);
+    border-color: #ff4d4d;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(145deg, #8b2525, #6b1b1b);
+}
+
+/* 主要內容區 */
+.main-content {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* 地圖區 */
+.map-section {
+    flex: 2;
+    background: var(--panel-bg);
+    border: 2px solid var(--border-gold);
+    border-radius: 8px;
+    padding: 20px;
+    overflow: auto;
+    position: relative;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
+}
+
+.map-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 15px;
+    height: 100%;
+}
+
+.city-node {
+    background: rgba(0,0,0,0.6);
+    border: 2px solid var(--neutral-color);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.city-node:hover {
+    border-color: var(--border-gold);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+    z-index: 10;
+}
+
+.city-node.selected {
+    border-color: #fff;
+    box-shadow: 0 0 20px #fff;
+    transform: scale(1.05);
+    z-index: 10;
+}
+
+.city-node[data-owner="player"] {
+    border-color: var(--player-color);
+    background: rgba(45, 90, 39, 0.3);
+}
+
+.city-node[data-owner="enemy"] {
+    border-color: var(--enemy-color);
+    background: rgba(139, 0, 0, 0.3);
+}
+
+.city-node-name {
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.city-node-troops {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+/* 右側資訊區 */
+.info-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.panel {
+    background: var(--panel-bg);
+    border: 2px solid var(--border-gold);
+    border-radius: 8px;
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.placeholder-text {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+}
+
+.city-title {
+    font-size: 28px;
+    color: var(--border-gold);
+    margin-bottom: 5px;
+    text-align: center;
+    border-bottom: 1px solid var(--text-secondary);
+    padding-bottom: 10px;
+}
+
+.city-owner {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.city-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+    background: rgba(0,0,0,0.4);
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.generals-list-container h3, .action-menu h3 {
+    color: var(--border-gold);
+    margin-bottom: 10px;
+    font-size: 18px;
+    border-left: 4px solid var(--border-gold);
+    padding-left: 10px;
+}
+
+.generals-list {
+    list-style: none;
+    margin-bottom: 25px;
+}
+
+.generals-list li {
+    background: rgba(0,0,0,0.5);
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid transparent;
+}
+
+.generals-list li:hover {
+    border-color: var(--text-secondary);
+}
+
+.general-name {
+    font-weight: bold;
+}
+
+.general-stats {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* 提示訊息 */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    padding: 15px 30px;
+    border-radius: 30px;
+    border: 1px solid var(--border-gold);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+}
