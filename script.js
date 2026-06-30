@@ -5,31 +5,31 @@ const RULERS = {
     neutral: { id: 'neutral', name: '在野/空城', color: 'neutral' }
 };
 
-// 初始城池 (簡化為一個 5x4 的網格結構)
+// 初始城池 (帶有地圖坐標)
 let cities = [
-    { id: 'c0', name: '幽州', owner: 'neutral', pop: 20000, agri: 100, comm: 100, troops: 5000, generals: [] },
-    { id: 'c1', name: '冀州', owner: 'neutral', pop: 40000, agri: 300, comm: 250, troops: 8000, generals: [] },
-    { id: 'c2', name: '平原', owner: 'player', pop: 30000, agri: 200, comm: 150, troops: 10000, generals: ['g1', 'g2', 'g3'] },
-    { id: 'c3', name: '北海', owner: 'neutral', pop: 25000, agri: 150, comm: 200, troops: 4000, generals: [] },
-    { id: 'c4', name: '徐州', owner: 'neutral', pop: 35000, agri: 250, comm: 250, troops: 6000, generals: [] },
+    { id: 'c0', name: '幽州', x: 75, y: 15, owner: 'neutral', pop: 20000, agri: 100, comm: 100, troops: 5000, generals: [] },
+    { id: 'c1', name: '冀州', x: 70, y: 25, owner: 'neutral', pop: 40000, agri: 300, comm: 250, troops: 8000, generals: [] },
+    { id: 'c2', name: '平原', x: 75, y: 35, owner: 'player', pop: 30000, agri: 200, comm: 150, troops: 10000, generals: ['g1', 'g2', 'g3'] },
+    { id: 'c3', name: '北海', x: 82, y: 35, owner: 'neutral', pop: 25000, agri: 150, comm: 200, troops: 4000, generals: [] },
+    { id: 'c4', name: '徐州', x: 78, y: 48, owner: 'neutral', pop: 35000, agri: 250, comm: 250, troops: 6000, generals: [] },
     
-    { id: 'c5', name: '并州', owner: 'neutral', pop: 15000, agri: 80, comm: 80, troops: 3000, generals: [] },
-    { id: 'c6', name: '晉陽', owner: 'neutral', pop: 20000, agri: 120, comm: 100, troops: 4000, generals: [] },
-    { id: 'c7', name: '兗州', owner: 'neutral', pop: 38000, agri: 280, comm: 200, troops: 7000, generals: [] },
-    { id: 'c8', name: '陳留', owner: 'cao', pop: 45000, agri: 350, comm: 300, troops: 15000, generals: ['g4', 'g5', 'g6'] },
-    { id: 'c9', name: '許昌', owner: 'cao', pop: 50000, agri: 400, comm: 350, troops: 20000, generals: ['g7'] },
+    { id: 'c5', name: '并州', x: 60, y: 25, owner: 'neutral', pop: 15000, agri: 80, comm: 80, troops: 3000, generals: [] },
+    { id: 'c6', name: '晉陽', x: 58, y: 18, owner: 'neutral', pop: 20000, agri: 120, comm: 100, troops: 4000, generals: [] },
+    { id: 'c7', name: '兗州', x: 65, y: 40, owner: 'neutral', pop: 38000, agri: 280, comm: 200, troops: 7000, generals: [] },
+    { id: 'c8', name: '陳留', x: 60, y: 42, owner: 'cao', pop: 45000, agri: 350, comm: 300, troops: 15000, generals: ['g4', 'g5', 'g6'] },
+    { id: 'c9', name: '許昌', x: 60, y: 50, owner: 'cao', pop: 50000, agri: 400, comm: 350, troops: 20000, generals: ['g7'] },
 
-    { id: 'c10', name: '涼州', owner: 'neutral', pop: 18000, agri: 90, comm: 150, troops: 8000, generals: [] },
-    { id: 'c11', name: '長安', owner: 'neutral', pop: 60000, agri: 300, comm: 400, troops: 25000, generals: [] },
-    { id: 'c12', name: '洛陽', owner: 'neutral', pop: 55000, agri: 250, comm: 350, troops: 15000, generals: [] },
-    { id: 'c13', name: '宛城', owner: 'neutral', pop: 30000, agri: 200, comm: 150, troops: 6000, generals: [] },
-    { id: 'c14', name: '壽春', owner: 'neutral', pop: 32000, agri: 220, comm: 200, troops: 5000, generals: [] },
+    { id: 'c10', name: '涼州', x: 25, y: 25, owner: 'neutral', pop: 18000, agri: 90, comm: 150, troops: 8000, generals: [] },
+    { id: 'c11', name: '長安', x: 45, y: 45, owner: 'neutral', pop: 60000, agri: 300, comm: 400, troops: 25000, generals: [] },
+    { id: 'c12', name: '洛陽', x: 52, y: 45, owner: 'neutral', pop: 55000, agri: 250, comm: 350, troops: 15000, generals: [] },
+    { id: 'c13', name: '宛城', x: 55, y: 55, owner: 'neutral', pop: 30000, agri: 200, comm: 150, troops: 6000, generals: [] },
+    { id: 'c14', name: '壽春', x: 75, y: 60, owner: 'neutral', pop: 32000, agri: 220, comm: 200, troops: 5000, generals: [] },
 
-    { id: 'c15', name: '漢中', owner: 'neutral', pop: 25000, agri: 150, comm: 100, troops: 10000, generals: [] },
-    { id: 'c16', name: '成都', owner: 'neutral', pop: 40000, agri: 350, comm: 250, troops: 12000, generals: [] },
-    { id: 'c17', name: '襄陽', owner: 'neutral', pop: 38000, agri: 280, comm: 300, troops: 8000, generals: [] },
-    { id: 'c18', name: '江夏', owner: 'neutral', pop: 28000, agri: 200, comm: 200, troops: 6000, generals: [] },
-    { id: 'c19', name: '建業', owner: 'neutral', pop: 45000, agri: 300, comm: 400, troops: 15000, generals: [] },
+    { id: 'c15', name: '漢中', x: 35, y: 55, owner: 'neutral', pop: 25000, agri: 150, comm: 100, troops: 10000, generals: [] },
+    { id: 'c16', name: '成都', x: 25, y: 70, owner: 'neutral', pop: 40000, agri: 350, comm: 250, troops: 12000, generals: [] },
+    { id: 'c17', name: '襄陽', x: 55, y: 65, owner: 'neutral', pop: 38000, agri: 280, comm: 300, troops: 8000, generals: [] },
+    { id: 'c18', name: '江夏', x: 65, y: 65, owner: 'neutral', pop: 28000, agri: 200, comm: 200, troops: 6000, generals: [] },
+    { id: 'c19', name: '建業', x: 85, y: 65, owner: 'neutral', pop: 45000, agri: 300, comm: 400, troops: 15000, generals: [] },
 ];
 
 // 初始武將資料
@@ -82,6 +82,9 @@ function renderMap() {
         if (city.owner === 'player') ownerType = 'player';
         else if (city.owner !== 'neutral') ownerType = 'enemy';
         node.dataset.owner = ownerType;
+        
+        node.style.left = city.x + '%';
+        node.style.top = city.y + '%';
 
         node.innerHTML = `
             <div class="city-node-name">${city.name}</div>
