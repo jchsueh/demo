@@ -32,15 +32,22 @@ let cities = [
     { id: 'c19', name: '建業', x: 85, y: 65, owner: 'neutral', pop: 45000, agri: 300, comm: 400, troops: 15000, generals: [] },
 ];
 
-// 初始武將資料
+// 初始武將資料 (擴充自武將.txt)
 const generalsDb = {
-    'g1': { id: 'g1', name: '劉備', hp: 80, force: 75, intel: 75, cmd: 80 },
-    'g2': { id: 'g2', name: '關羽', hp: 95, force: 98, intel: 75, cmd: 90 },
-    'g3': { id: 'g3', name: '張飛', hp: 92, force: 97, intel: 40, cmd: 85 },
-    'g4': { id: 'g4', name: '曹操', hp: 90, force: 85, intel: 95, cmd: 98 },
-    'g5': { id: 'g5', name: '夏侯惇', hp: 90, force: 90, intel: 60, cmd: 85 },
-    'g6': { id: 'g6', name: '荀彧', hp: 60, force: 30, intel: 98, cmd: 50 },
-    'g7': { id: 'g7', name: '曹仁', hp: 85, force: 86, intel: 65, cmd: 88 },
+    'g1': { id: 'g1', name: '劉備', hp: 85, intel: 87, force: 73, cha: 100 },
+    'g2': { id: 'g2', name: '關羽', hp: 99, intel: 83, force: 99, cha: 90 },
+    'g3': { id: 'g3', name: '張飛', hp: 100, intel: 41, force: 99, cha: 28 },
+    'g4': { id: 'g4', name: '曹操', hp: 90, intel: 95, force: 82, cha: 99 },
+    'g5': { id: 'g5', name: '夏侯惇', hp: 94, intel: 70, force: 94, cha: 79 },
+    'g6': { id: 'g6', name: '荀彧', hp: 73, intel: 97, force: 49, cha: 78 },
+    'g7': { id: 'g7', name: '曹仁', hp: 84, intel: 69, force: 84, cha: 51 },
+    'g8': { id: 'g8', name: '呂布', hp: 97, intel: 28, force: 100, cha: 45 },
+    'g9': { id: 'g9', name: '趙雲', hp: 98, intel: 88, force: 99, cha: 82 },
+    'g10': { id: 'g10', name: '諸葛亮', hp: 73, intel: 100, force: 72, cha: 98 },
+    'g11': { id: 'g11', name: '周瑜', hp: 83, intel: 97, force: 84, cha: 94 },
+    'g12': { id: 'g12', name: '孫權', hp: 93, intel: 80, force: 80, cha: 99 },
+    'g13': { id: 'g13', name: '董卓', hp: 93, intel: 55, force: 90, cha: 24 },
+    'g14': { id: 'g14', name: '袁紹', hp: 80, intel: 80, force: 86, cha: 90 }
 };
 
 // 玩家全域資源
@@ -55,7 +62,7 @@ let playerState = {
 let selectedCityId = null;
 
 // DOM 元素
-const mapGrid = document.getElementById('map-grid');
+const mapSvg = document.getElementById('map-svg');
 const cityInfoPanel = document.getElementById('city-info-panel');
 const defaultPanel = document.getElementById('default-panel');
 const actionMenu = document.getElementById('action-menu');
@@ -65,34 +72,57 @@ function initGame() {
     renderMap();
     updateTopBar();
     setupEventListeners();
+    window.addEventListener('resize', renderMap); // 隨視窗大小重新繪製地圖
 }
 
-// 渲染地圖
+// 渲染地圖 (D3 Voronoi)
 function renderMap() {
-    mapGrid.innerHTML = '';
-    cities.forEach(city => {
-        const node = document.createElement('div');
-        node.className = 'city-node';
-        if (city.id === selectedCityId) {
-            node.classList.add('selected');
-        }
-        node.dataset.id = city.id;
+    const section = document.getElementById('map-section');
+    // 給予預設大小避免無法繪製
+    const width = section.clientWidth || 800;
+    const height = section.clientHeight || 600;
+
+    // 將百分比座標轉換為實際像素座標
+    const points = cities.map(city => [
+        (city.x / 100) * width,
+        (city.y / 100) * height
+    ]);
+
+    // 使用 D3 產生 Voronoi 拼塊
+    const delaunay = d3.Delaunay.from(points);
+    const voronoi = delaunay.voronoi([0, 0, width, height]);
+
+    const svg = d3.select('#map-svg');
+    svg.selectAll('*').remove();
+
+    cities.forEach((city, i) => {
+        const pathData = voronoi.renderCell(i);
         
         let ownerType = 'neutral';
         if (city.owner === 'player') ownerType = 'player';
         else if (city.owner !== 'neutral') ownerType = 'enemy';
-        node.dataset.owner = ownerType;
-        
-        node.style.left = city.x + '%';
-        node.style.top = city.y + '%';
 
-        node.innerHTML = `
-            <div class="city-node-name">${city.name}</div>
-            <div class="city-node-troops">兵: ${city.troops}</div>
-        `;
-        
-        node.addEventListener('click', () => selectCity(city.id));
-        mapGrid.appendChild(node);
+        const g = svg.append('g')
+            .attr('class', 'city-group')
+            .on('click', () => selectCity(city.id));
+
+        g.append('path')
+            .attr('d', pathData)
+            .attr('class', 'voronoi-cell')
+            .classed('selected', city.id === selectedCityId)
+            .attr('data-owner', ownerType);
+
+        g.append('text')
+            .attr('x', points[i][0])
+            .attr('y', points[i][1] - 5)
+            .attr('class', 'city-text-name')
+            .text(city.name);
+
+        g.append('text')
+            .attr('x', points[i][0])
+            .attr('y', points[i][1] + 15)
+            .attr('class', 'city-text-troops')
+            .text(`兵: ${city.troops}`);
     });
 }
 
@@ -127,7 +157,7 @@ function selectCity(cityId) {
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <span class="general-name">${g.name}</span>
-                    <span class="general-stats">武:${g.force} 智:${g.intel}</span>
+                    <span class="general-stats">體:${g.hp} 智:${g.intel} 武:${g.force} 魅:${g.cha}</span>
                 `;
                 generalsList.appendChild(li);
             });

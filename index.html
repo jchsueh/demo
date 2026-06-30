@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="style.css">
     <!-- 引入 Google 字體，增加古典感 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 引入 D3.js 用於計算地圖板塊 -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
     <div class="game-container">
@@ -26,10 +28,10 @@
 
         <div class="main-content">
             <!-- 左側地圖區 -->
-            <section class="map-section">
-                <div id="map-grid" class="map-grid">
-                    <!-- 城池將由 JS 動態生成 -->
-                </div>
+            <section class="map-section" id="map-section">
+                <svg id="map-svg" class="map-svg" width="100%" height="100%">
+                    <!-- 地圖拼塊將由 JS 動態生成 -->
+                </svg>
             </section>
 
             <!-- 右側資訊與操作區 -->
